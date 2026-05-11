@@ -1,10 +1,5 @@
-import type { NextConfig } from 'next'
-
-const nextConfig: NextConfig = {
-  // For static GCS deployment, switch to:
-  //   output: 'export',
-  //   trailingSlash: true,
-  // For Cloud Run, leave as default (SSR).
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
