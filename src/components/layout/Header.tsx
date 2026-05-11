@@ -46,7 +46,7 @@ export default function Header() {
               {NAV_LINKS.map((link) => {
                 const active =
                   pathname === link.href ||
-                  (link.href !== '/' && pathname.startsWith(link.href))
+                  pathname.startsWith(`${link.href}/`)
                 return (
                   <li key={link.href}>
                     <Link
