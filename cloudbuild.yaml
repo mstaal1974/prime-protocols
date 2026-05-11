@@ -1,0 +1,26 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/prime-protocols:$COMMIT_SHA', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/prime-protocols:$COMMIT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'prime-protocols'
+      - '--image=gcr.io/$PROJECT_ID/prime-protocols:$COMMIT_SHA'
+      - '--region=australia-southeast1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=3080'
+      - '--memory=512Mi'
+      - '--min-instances=1'
+      - '--max-instances=10'
+      - '--set-env-vars=NEXT_PUBLIC_SITE_URL=https://primeprotocols.com.au,NEXT_PUBLIC_SITE_NAME=Prime Protocols'
+      - '--update-secrets=NEXT_PUBLIC_HALAXY_BOOKING_URL=halaxy-booking-url:latest,NEXT_PUBLIC_CONTACT_EMAIL=contact-email:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
