@@ -26,7 +26,7 @@ export default function Hero() {
             <span className="inline-block h-px w-8 bg-steel-light" />
             Doctor-led · Telehealth · Australia-wide
           </div>
-          <h1 className="font-display text-display-xl font-semibold leading-[0.95] tracking-tight">
+          <h1 className="font-display text-display-xl font-semibold leading-[0.95] tracking-tight text-white">
             <span className="block">Doctor-led men&apos;s</span>
             <span className="block">health.</span>
             <span className="block text-steel-light">Evidence-based.</span>
