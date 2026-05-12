@@ -19,7 +19,6 @@ export default function Hero() {
           />
         </svg>
       </div>
-
       <div className="container-site relative py-24 md:py-32 lg:py-40">
         <div className="max-w-3xl">
           <div className="mb-6 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-steel-light">
@@ -32,11 +31,7 @@ export default function Hero() {
             <span className="block text-steel-light">Evidence-based.</span>
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-grey-200">
-<<<<<<< HEAD
-          Hormonal health, recovery, longevity, metabolic health, energy and cognition. Telehealth
-=======
             Hormonal health, recovery, longevity, metabolic health, energy and cognition. Telehealth
->>>>>>> 3c420f6 (Apply AHPRA compliance patch + Hero contrast fix)
             consultations and clinically supervised protocols — available Australia-wide.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -52,7 +47,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
       {/* Editorial trust strip */}
       <div className="relative border-t border-navy-light/60">
         <div className="container-site grid grid-cols-2 divide-x divide-navy-light/60 md:grid-cols-4">
