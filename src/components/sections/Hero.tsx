@@ -32,7 +32,11 @@ export default function Hero() {
             <span className="block text-steel-light">Evidence-based.</span>
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-grey-200">
-          Hormone Therapy, recovery, longevity, metabolic health, energy and cognition. Telehealth
+<<<<<<< HEAD
+          Hormonal health, recovery, longevity, metabolic health, energy and cognition. Telehealth
+=======
+            Hormonal health, recovery, longevity, metabolic health, energy and cognition. Telehealth
+>>>>>>> 3c420f6 (Apply AHPRA compliance patch + Hero contrast fix)
             consultations and clinically supervised protocols — available Australia-wide.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">

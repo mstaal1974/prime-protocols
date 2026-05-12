@@ -1,5 +1,13 @@
+# *
 User-agent: *
 Allow: /
+
+# *
+User-agent: *
 Disallow: /api/
 
+# Host
+Host: https://primeprotocols.com.au
+
+# Sitemaps
 Sitemap: https://primeprotocols.com.au/sitemap.xml
