@@ -27,7 +27,7 @@ export default function AboutPage() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-grey-700">
             Prime Protocols is a doctor-led men&apos;s health telehealth clinic operating across
             Australia. We provide evidence-based clinical assessment and treatment across six
-            clinical areas — testosterone, recovery, longevity, metabolic health, energy, and
+            clinical areas — hormonal health, recovery, longevity, metabolic health, energy, and
             specialist peptide therapy.
           </p>
         </div>

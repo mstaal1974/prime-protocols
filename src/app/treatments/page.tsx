@@ -6,7 +6,7 @@ import CTABanner from '@/components/sections/CTABanner'
 export const metadata: Metadata = {
   title: 'Treatments — Six clinical areas',
   description:
-    "Six clinical areas where men's medicine actually moves the needle. Doctor-led assessment and treatment across testosterone, recovery, longevity, metabolic, energy, and peptide therapy.",
+    "Six clinical areas where men's medicine actually moves the needle. Doctor-led assessment and treatment across hormonal health, recovery, longevity, metabolic, energy, and peptide therapy.",
   alternates: { canonical: '/treatments' },
 }
 

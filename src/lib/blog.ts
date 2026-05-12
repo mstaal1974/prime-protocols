@@ -1,35 +1,20 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import type { BlogPost, BlogFrontmatter } from '@/types/blog'
-import { AUTHORS, type AuthorId } from '@/lib/constants'
+import { AUTHORS, type AuthorId } from './constants'
+import type { BlogFrontmatter, BlogPost } from '@/types/blog'
 
-const POSTS_DIR = path.join(process.cwd(), 'src/content/blog')
+const BLOG_DIR = path.join(process.cwd(), 'src/content/blog')
 
-function readingMinutes(text: string): number {
-  const words = text.trim().split(/\s+/).length
-  return Math.max(1, Math.round(words / 220))
+function readingMinutesFor(text: string): number {
+  // ~220 wpm, average word length 5 chars
+  return Math.max(1, Math.round(text.length / 5 / 220))
 }
 
-export function getAllPostSlugs(): string[] {
-  if (!fs.existsSync(POSTS_DIR)) return []
-  return fs
-    .readdirSync(POSTS_DIR)
-    .filter((f) => f.endsWith('.mdx') || f.endsWith('.md'))
-    .map((f) => f.replace(/\.(mdx|md)$/, ''))
-}
-
-export function getPostBySlug(slug: string): BlogPost | null {
-  const mdxPath = path.join(POSTS_DIR, `${slug}.mdx`)
-  const mdPath = path.join(POSTS_DIR, `${slug}.md`)
-  const filePath = fs.existsSync(mdxPath) ? mdxPath : fs.existsSync(mdPath) ? mdPath : null
-  if (!filePath) return null
-
-  const file = fs.readFileSync(filePath, 'utf8')
-  const { data, content } = matter(file)
+function buildPost(slug: string, raw: string): BlogPost {
+  const { data, content } = matter(raw)
   const fm = data as BlogFrontmatter
-  const authorRecord = AUTHORS[fm.author as AuthorId]
-
+  const author = AUTHORS[fm.author]
   return {
     slug,
     title: fm.title,
@@ -39,26 +24,47 @@ export function getPostBySlug(slug: string): BlogPost | null {
     pillar: fm.pillar,
     date: fm.date,
     reviewedBy: fm.reviewed,
-    readingMinutes: readingMinutes(content),
+    readingMinutes: readingMinutesFor(content),
     content,
-    isGuest: authorRecord?.type === 'guest',
+    isGuest: author?.type === 'guest',
   }
+}
+
+export function getAllPostSlugs(): string[] {
+  if (!fs.existsSync(BLOG_DIR)) return []
+  return fs
+    .readdirSync(BLOG_DIR)
+    .filter((f) => f.endsWith('.mdx'))
+    .map((f) => f.replace(/\.mdx$/, ''))
 }
 
 export function getAllPosts(): BlogPost[] {
   return getAllPostSlugs()
-    .map((slug) => getPostBySlug(slug))
-    .filter((p): p is BlogPost => p !== null)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((slug) => {
+      const raw = fs.readFileSync(path.join(BLOG_DIR, `${slug}.mdx`), 'utf8')
+      return buildPost(slug, raw)
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
 }
 
-export function getPostsByCategory(categorySlug: string): BlogPost[] {
-  return getAllPosts().filter((p) => p.category === categorySlug)
+export function getPostBySlug(slug: string): BlogPost | null {
+  const filepath = path.join(BLOG_DIR, `${slug}.mdx`)
+  if (!fs.existsSync(filepath)) return null
+  const raw = fs.readFileSync(filepath, 'utf8')
+  return buildPost(slug, raw)
 }
 
-export function getPostsByAuthorType(type: 'staff' | 'guest' | 'doctor'): BlogPost[] {
-  return getAllPosts().filter((p) => {
-    const a = AUTHORS[p.author as AuthorId]
-    return a?.type === type
+export function getPostsByCategory(posts: BlogPost[], categorySlug: string): BlogPost[] {
+  return posts.filter((p) => p.category === categorySlug)
+}
+
+export function getPostsByAuthorType(
+  posts: BlogPost[],
+  type: 'staff' | 'doctor' | 'guest' | 'non-guest'
+): BlogPost[] {
+  if (type === 'non-guest') return posts.filter((p) => !p.isGuest)
+  return posts.filter((p) => {
+    const author = AUTHORS[p.author as AuthorId]
+    return author?.type === type
   })
 }

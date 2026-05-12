@@ -1,15 +1,15 @@
 // Single source of truth for site-wide data.
-// All copy and structure references compliance flags from strategy doc.
 
 export const SITE = {
   name: 'Prime Protocols',
   shortName: 'Prime Protocols',
   tagline: "Doctor-led men's health. Evidence-based. Telehealth Australia-wide.",
   description:
-    "Doctor-led men's health telehealth clinic. Testosterone optimisation, injury recovery, longevity medicine, metabolic health and energy. Available Australia-wide.",
+    "Doctor-led men's health telehealth clinic. Hormonal health, injury recovery, longevity medicine, metabolic health and energy. Available Australia-wide.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://primeprotocols.com.au',
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'hello@primeprotocols.com.au',
   halaxyUrl: process.env.NEXT_PUBLIC_HALAXY_BOOKING_URL ?? '#book',
+  ghlWebhookUrl: process.env.NEXT_PUBLIC_GHL_WEBHOOK_URL ?? '',
   abn: 'TBC',
   locale: 'en-AU',
 } as const
@@ -34,11 +34,11 @@ export type TreatmentArea = {
 
 export const TREATMENT_AREAS: TreatmentArea[] = [
   {
-    slug: 'testosterone',
-    title: 'Testosterone & Hormonal Health',
-    shortTitle: 'Testosterone & Hormones',
+    slug: 'hormonal-health',
+    title: 'Hormonal Decline & Optimisation',
+    shortTitle: 'Hormonal Health',
     description:
-      'Comprehensive hormone assessment and medically supervised testosterone optimisation. Total and free T, LH, FSH, oestradiol — read in context.',
+      'Comprehensive hormone assessment and medically supervised optimisation. Free and total hormones, SHBG, LH, FSH, oestradiol — read in clinical context.',
     icon: 'hormone',
     badge: 'Medical assessment required',
   },
@@ -89,7 +89,6 @@ export const TREATMENT_AREAS: TreatmentArea[] = [
   },
 ]
 
-// Strategy doc §9: Sexual Health & Function held pending TGA regulatory review.
 export const HELD_TREATMENT_AREAS = [
   {
     slug: 'sexual-health',
@@ -99,14 +98,8 @@ export const HELD_TREATMENT_AREAS = [
   },
 ]
 
-// AUDIT NOTE: Build spec's BLOG_CATEGORIES omitted "Patient Education"
-// (strategy Pillar 6) and added "Peptide Therapy" as a category despite
-// peptides being a treatment area rather than a content pillar in the
-// strategy. Aligned below to the 7 strategy pillars exactly. Peptide
-// content is woven through Treatment, Patient Education, and For Doctors
-// pillars per strategy §7.3.
 export const BLOG_CATEGORIES = [
-  { slug: 'testosterone-hormones', label: 'Testosterone & Hormones', pillar: 1 },
+  { slug: 'hormonal-health', label: 'Hormonal Health', pillar: 1 },
   { slug: 'injury-recovery', label: 'Injury & Recovery', pillar: 2 },
   { slug: 'longevity', label: 'Longevity', pillar: 3 },
   { slug: 'weight-metabolic', label: 'Weight & Metabolic', pillar: 4 },
@@ -115,9 +108,7 @@ export const BLOG_CATEGORIES = [
   { slug: 'for-doctors', label: 'For Doctors', pillar: 7 },
 ] as const
 
-// Author registry — used by BlogCard and AuthorBio components.
-// EEAT (Google ranking signal per strategy §7.5): every article needs
-// named author + credentials + clinical-review attribution.
+// EEAT (strategy §7.5) + Elise persona disclosure (strategy §13.5).
 export const AUTHORS = {
   'elise-hartley': {
     id: 'elise-hartley',
@@ -134,7 +125,7 @@ export const AUTHORS = {
     id: 'adam-burgess',
     name: 'Adam Burgess',
     title: 'Guest Contributor',
-    credentials: 'Path B — addressing underlying drivers before TRT',
+    credentials: 'Path B — addressing underlying drivers before hormone replacement',
     type: 'guest' as const,
     bio: 'Adam Burgess has a physics degree he has never used, a police career he occasionally misses, and 30 years of ICT consulting experience that has taken him to more countries and data centres than he can accurately count. Now in his early 50s, he is considerably more interested in how the human body works than how networks do — and writes honestly about both at adamburgess.me.',
     website: 'https://adamburgess.me',
@@ -144,7 +135,7 @@ export const AUTHORS = {
     id: 'michael-staal',
     name: 'Michael Staal',
     title: 'Guest Contributor',
-    credentials: 'Path A — TRT with adjunct therapies',
+    credentials: 'Path A — hormone replacement with adjunct therapies',
     type: 'guest' as const,
     bio: 'Bio pending — full strategy session required. See strategy doc §8.3.',
     headshot: '/images/authors/michael-staal.jpg',
@@ -162,14 +153,14 @@ export const AUTHORS = {
 
 export type AuthorId = keyof typeof AUTHORS
 
-// Strategy §7.2 — every keyword target is condition/outcome-based.
-// Brand-name drug keywords explicitly excluded pending lawyer sign-off.
 export const SEO_KEYWORDS = {
   global: [
     "men's health clinic telehealth Australia",
-    'low testosterone treatment Australia',
-    'testosterone specialist telehealth',
     "men's hormone testing Australia",
+    "men's hormone clinic Australia",
+    'hormonal decline men Australia',
+    'hormone optimisation Australia',
+    'androgen deficiency assessment',
     'peptide therapy Australia',
     'peptide doctor Australia',
     'legal peptide prescription Australia',
@@ -186,11 +177,8 @@ export const SEO_KEYWORDS = {
   ],
 } as const
 
-// Strategy §7.5 — hub-and-spoke. Each blog category links back to its
-// treatment hub. AUDIT NOTE: Build system mentioned linking audit but
-// didn't define the mapping. Defined explicitly here.
 export const PILLAR_TO_TREATMENT_HUB: Record<string, string | null> = {
-  'testosterone-hormones': '/treatments/testosterone',
+  'hormonal-health': '/treatments/hormonal-health',
   'injury-recovery': '/treatments/injury-recovery',
   longevity: '/treatments/longevity',
   'weight-metabolic': '/treatments/weight-management',
@@ -200,4 +188,4 @@ export const PILLAR_TO_TREATMENT_HUB: Record<string, string | null> = {
 }
 
 export const FOOTER_DISCLAIMER =
-  "Prime Protocols is a doctor-led Australian telehealth medical service. All treatments are prescribed exclusively by registered medical practitioners following individual clinical assessment. The information on this website is general and educational only — it is not medical advice. Always seek the advice of a qualified, registered healthcare practitioner regarding any medical condition or treatment decision. Therapeutic goods in Australia are regulated by the Therapeutic Goods Administration (TGA). In a medical emergency, call 000."
+  'Prime Protocols is a doctor-led Australian telehealth medical service. All treatments are prescribed exclusively by registered medical practitioners following individual clinical assessment. The information on this website is general and educational only — it is not medical advice. Always seek the advice of a qualified, registered healthcare practitioner regarding any medical condition or treatment decision. Therapeutic goods in Australia are regulated by the Therapeutic Goods Administration (TGA). In a medical emergency, call 000.'

@@ -13,22 +13,21 @@ import { getAllPostSlugs, getPostBySlug } from '@/lib/blog'
 import { AUTHORS, BLOG_CATEGORIES, type AuthorId, SITE } from '@/lib/constants'
 import { formatDate } from '@/lib/utils'
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({
+export function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+  params: { slug: string }
+}): Metadata {
+  const post = getPostBySlug(params.slug)
   if (!post) return { title: 'Article not found' }
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${slug}` },
+    alternates: { canonical: `/blog/${params.slug}` },
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -39,31 +38,21 @@ export async function generateMetadata({
   }
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  const post = getPostBySlug(params.slug)
   if (!post) notFound()
 
   const author = AUTHORS[post.author as AuthorId]
   const cat = BLOG_CATEGORIES.find((c) => c.slug === post.category)
   const isGuest = author?.type === 'guest'
 
-  // EEAT (strategy §7.5): JSON-LD Article schema with named author
-  // and clinical reviewer attribution where applicable.
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MedicalWebPage',
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    author: {
-      '@type': 'Person',
-      name: author?.name,
-    },
+    author: { '@type': 'Person', name: author?.name },
     ...(post.reviewedBy && {
       reviewedBy: {
         '@type': 'Person',
@@ -85,7 +74,6 @@ export default async function BlogPostPage({
       />
 
       <article>
-        {/* Article hero */}
         <header className="bg-white">
           <div className="container-site py-16 md:py-24">
             <nav aria-label="Breadcrumb" className="mb-8 text-xs text-grey-500">
@@ -115,7 +103,6 @@ export default async function BlogPostPage({
           </div>
         </header>
 
-        {/* Article body */}
         <section className="bg-white pb-12">
           <div className="container-site">
             <ProseSection>
@@ -124,23 +111,19 @@ export default async function BlogPostPage({
           </div>
         </section>
 
-        {/* Disclaimer — switches on guest vs staff */}
         <section className="bg-white">
           <div className="container-site max-w-prose mx-auto">
             {isGuest ? <GuestDisclaimer /> : <Disclaimer />}
           </div>
         </section>
 
-        {/* Author bio + EEAT clinical review */}
         <section className="bg-bone py-section">
           <div className="container-site max-w-3xl mx-auto">
             <AuthorBio authorId={post.author as AuthorId} reviewedById={post.reviewedBy} />
             <div className="mt-12 flex flex-col items-center text-center">
-              <p className="text-sm text-grey-600">
-                Ready for a doctor-led assessment?
-              </p>
+              <p className="text-sm text-grey-600">Ready for a doctor-led assessment?</p>
               <div className="mt-4">
-                <BookingButton location={`blog-${slug}-cta`} />
+                <BookingButton location={`blog-${params.slug}-cta`} />
               </div>
             </div>
           </div>

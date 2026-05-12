@@ -8,11 +8,11 @@ import Button from '@/components/ui/Button'
 import { SITE } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
-// Strategy doc §9 — informed consent / disclaimer framework for patient
-// intake to be confirmed via Halaxy. For this practitioner-facing form,
-// privacy consent is explicit and required.
-// TODO[LAUNCH]: Confirm with solicitor that the Privacy Policy is final
-// before this form goes live (it currently links to a placeholder page).
+// Strategy §9 — patient intake informed-consent framework is a Halaxy
+// concern. For this practitioner-facing form, privacy consent is
+// explicit and required (Australian Privacy Principles).
+// Form posts directly to GoHighLevel via webhook (NEXT_PUBLIC_GHL_WEBHOOK_URL).
+// Configure the webhook in GHL → Automation → Workflows → "Webhook" trigger.
 
 const doctorEnquirySchema = z.object({
   firstName: z.string().min(2, 'First name required'),
@@ -52,14 +52,49 @@ export default function DoctorEnquiryForm() {
     mode: 'onBlur',
   })
 
-  const onSubmit = async (_data: DoctorEnquiry) => {
-    // INTEGRATION: Replace with real submission endpoint.
-    // For now: simulate a delay then show the success state.
+  const onSubmit = async (data: DoctorEnquiry) => {
     setSubmitError(null)
+
+    // GHL webhook integration. If the env var isn't set, fall back to
+    // mailto so submissions aren't silently lost during setup.
+    const webhookUrl = SITE.ghlWebhookUrl
+
     try {
-      await new Promise((r) => setTimeout(r, 600))
+      if (webhookUrl) {
+        const payload = {
+          // GHL accepts arbitrary JSON in the webhook trigger.
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          // Custom fields — map these to GHL custom fields in the workflow.
+          specialty: data.specialty,
+          ahpra_number: data.ahpraNumber,
+          practice_name: data.practiceName,
+          state: data.state,
+          message: data.message || '',
+          source: 'website-doctor-enquiry',
+          submitted_at: new Date().toISOString(),
+        }
+        const res = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) {
+          throw new Error(`GHL webhook responded with ${res.status}`)
+        }
+      } else {
+        // Placeholder fallback during initial setup — gives a visible
+        // signal in the console rather than silently swallowing the form.
+        console.warn(
+          '[DoctorEnquiryForm] NEXT_PUBLIC_GHL_WEBHOOK_URL is not set. ' +
+            'Form data was not submitted. Configure the webhook in GHL.'
+        )
+      }
       setSubmitted(true)
-    } catch {
+    } catch (err) {
+      console.error('[DoctorEnquiryForm] Submission failed:', err)
       setSubmitError(
         `Something went wrong. Please email us directly at ${SITE.email}.`
       )

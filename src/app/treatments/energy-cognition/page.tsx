@@ -42,7 +42,7 @@ export default function EnergyCognitionPage() {
 
             <h2>What causes medically significant fatigue</h2>
             <ul>
-              <li>Hormonal imbalance — low testosterone, thyroid dysfunction, cortisol patterns</li>
+              <li>Hormonal imbalance — hormonal decline, thyroid dysfunction, cortisol patterns</li>
               <li>Disrupted sleep architecture — including undiagnosed sleep apnoea</li>
               <li>Insulin resistance and metabolic drift</li>
               <li>Chronic low-grade inflammation</li>

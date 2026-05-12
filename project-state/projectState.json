@@ -1,8 +1,13 @@
 {
   "project": "Prime Protocols",
   "domain": "primeprotocols.com.au",
-  "buildPhase": 5,
-  "buildContext": "Generated in a single pass in the Claude container, not by the multi-agent orchestration. The agent prompts in the build system spec describe roles that were performed in sequence here.",
+  "version": "0.2.0",
+  "architecture": {
+    "hosting": "Cloud Run (australia-southeast1)",
+    "cms": "Sanity (managed at /studio)",
+    "crm": "GoHighLevel (doctor enquiry form via webhook)",
+    "booking": "Halaxy"
+  },
   "completedTasks": [
     "scaffold-all-config",
     "design-system-tokens-aligned-to-logo",
@@ -10,18 +15,23 @@
     "layout-header-footer",
     "all-sections",
     "all-14-pages",
-    "doctor-enquiry-form",
+    "doctor-enquiry-form-with-ghl-webhook",
     "halaxy-placeholder-integration",
-    "blog-data-layer",
-    "4-sample-blog-articles",
+    "sanity-cms-schemas",
+    "sanity-studio-embedded-at-/studio",
+    "blog-data-layer-sanity-backed",
+    "portable-text-renderer",
+    "sanity-seed-script",
     "seo-metadata-per-page",
-    "json-ld-organization-and-article",
+    "json-ld-organization-and-medical-web-page",
     "sitemap-config",
     "dockerfile",
     "cloud-build-config",
     "github-actions-deploy",
     "gcs-static-deploy-script",
-    "load-balancer-setup-doc"
+    "load-balancer-setup-doc",
+    "ghl-setup-doc",
+    "sanity-setup-doc"
   ],
   "complianceFlags": [
     "OK: No specific peptide names in promotional context",
@@ -33,10 +43,23 @@
     "OK: All booking CTAs use env-driven Halaxy URL",
     "OK: Footer disclaimer present on every page",
     "OK: Privacy Policy + Terms of Service marked as placeholders with noindex",
-    "OK: EEAT — author bios include credentials + clinical review attribution",
-    "OK: Strategy §13.5 — Elise persona disclosure present in AuthorBio"
+    "OK: EEAT — Sanity schema enforces author bio with credentials + clinical reviewer",
+    "OK: Strategy §13.5 — Elise persona disclosure required in author schema and rendered in AuthorBio",
+    "OK: Doctor enquiry form has privacy consent checkbox + GHL webhook with fallback"
   ],
   "launchBlocklist": [
+    {
+      "id": "sanity-project-created",
+      "status": "blocked",
+      "owner": "ops",
+      "note": "Create at sanity.io/manage, set env vars in Cloud Run, run npm run seed"
+    },
+    {
+      "id": "ghl-workflow-created",
+      "status": "blocked",
+      "owner": "ops",
+      "note": "Create webhook trigger in GHL, set NEXT_PUBLIC_GHL_WEBHOOK_URL in Cloud Run"
+    },
     {
       "id": "privacy-policy-legal-review",
       "status": "blocked",
@@ -46,80 +69,68 @@
     {
       "id": "terms-legal-review",
       "status": "blocked",
-      "owner": "solicitor",
-      "note": "src/app/terms-of-service/page.tsx is a placeholder"
+      "owner": "solicitor"
     },
     {
       "id": "blog-disclaimer-legal-review",
       "status": "blocked",
-      "owner": "solicitor",
-      "note": "Verbatim text from strategy §7.4 in Disclaimer.tsx — review required"
+      "owner": "solicitor"
     },
     {
       "id": "guest-disclaimer-legal-review",
       "status": "blocked",
-      "owner": "solicitor",
-      "note": "Verbatim text from strategy §8.5 in GuestDisclaimer.tsx — review required"
+      "owner": "solicitor"
     },
     {
       "id": "tga-content-review",
       "status": "blocked",
-      "owner": "regulatory-lawyer",
-      "note": "All treatment pages need TGA-aware review before publication"
+      "owner": "regulatory-lawyer"
     },
     {
       "id": "dr-kai-profile-complete",
       "status": "blocked",
-      "owner": "founder",
-      "note": "/about page has explicit placeholder block"
+      "owner": "founder"
     },
     {
       "id": "elise-portrait-generated",
       "status": "blocked",
-      "owner": "design",
-      "note": "Strategy §13.3 prompt to be run; image goes to /public/images/authors/elise-hartley.jpg"
+      "owner": "design"
     },
     {
       "id": "halaxy-live-url",
       "status": "blocked",
-      "owner": "ops",
-      "note": "Set NEXT_PUBLIC_HALAXY_BOOKING_URL env var; placeholder breaks gracefully"
+      "owner": "ops"
     },
     {
       "id": "halaxy-intake-consent",
       "status": "blocked",
-      "owner": "regulatory-lawyer",
-      "note": "Strategy §9 — Halaxy intake disclaimer + informed consent framework. Marker in src/lib/halaxy.ts."
+      "owner": "regulatory-lawyer"
     },
     {
       "id": "pathology-provider-decision",
       "status": "blocked",
-      "owner": "founder",
-      "note": "Strategy Open Items #14 — placeholder in how-it-works step 03"
+      "owner": "founder"
     },
     {
       "id": "minimum-10-blog-articles",
       "status": "in-progress",
       "owner": "content",
-      "note": "4 articles seeded; 6 more required before launch"
+      "note": "4 articles seeded into Sanity; 6 more required. Add via /studio."
     },
     {
       "id": "dns-configured",
       "status": "blocked",
-      "owner": "ops",
-      "note": "See docs/gcp-load-balancer-setup.md"
+      "owner": "ops"
     },
     {
       "id": "ssl-active",
       "status": "blocked",
-      "owner": "ops",
-      "note": "Google-managed cert provisioning depends on DNS"
+      "owner": "ops"
     },
     {
       "id": "real-testimonials",
       "status": "blocked",
-      "owner": "founder + regulatory-lawyer",
-      "note": "Testimonials.tsx currently renders placeholders"
+      "owner": "founder + regulatory-lawyer"
     }
   ],
   "launchReady": false

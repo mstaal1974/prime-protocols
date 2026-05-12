@@ -75,7 +75,7 @@ export default function WeightManagementPage() {
               <li>Comprehensive lipid panel including ApoB</li>
               <li>hs-CRP (inflammation marker)</li>
               <li>Liver function (ALT, GGT)</li>
-              <li>Hormonal markers — testosterone, SHBG, thyroid</li>
+              <li>Hormonal markers — SHBG, free hormones, thyroid</li>
             </ul>
             <p>
               These tell a much fuller story than weight or BMI alone. Two men at the same weight

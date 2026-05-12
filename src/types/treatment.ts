@@ -7,7 +7,7 @@ export type IconName =
   | 'peptide'
 
 export type TreatmentSlug =
-  | 'testosterone'
+  | 'hormonal-health'
   | 'injury-recovery'
   | 'longevity'
   | 'weight-management'

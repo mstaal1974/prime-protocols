@@ -40,7 +40,7 @@ export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
             Clinical writing on men&apos;s health. Without the hype.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-grey-700">
-            Evidence-based articles on testosterone, recovery, longevity, metabolic health, energy
+            Evidence-based articles on hormonal health, recovery, longevity, metabolic health, energy
             and cognition. Written by our health science team and clinically reviewed before
             publication.
           </p>
