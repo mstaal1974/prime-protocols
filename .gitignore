@@ -9,3 +9,4 @@ build/
 dist/
 coverage/
 .vercel
+public/sitemap*.xml
